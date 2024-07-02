@@ -62,24 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (quoteContainer) {
         const urlParams = new URLSearchParams(window.location.search);
         const quoteId = urlParams.get('quoteId');
-
         if (quoteId) {
             fetch(`http://127.0.0.1:8080/randomQuote/api/v1/quote?id=${quoteId}`)
                 .then(response => response.json())
                 .then(data => {
-                    randomQuote.textContent = `"${data.quote}"`;;
-                    quoteImage.src = data.imagelink;
-                    quoteImage.style.display = 'block';
-                    quoteAuthor.textContent = `— ${data.author}`;
+                    displayQuote(data);
                 });
         } else {
-            fetch('/api/random-quote')
+            fetch('http://127.0.0.1:8080/randomQuote/api/v1/random-quote')
                 .then(response => response.json())
                 .then(data => {
-                    randomQuote.textContent = data.quote;
-                    quoteImage.src = data.imagelink;
-                    quoteImage.style.display = 'block';
-                    quoteAuthor.textContent = `— ${data.author}`;
+                    displayQuote(data);
                 });
         }
     }
@@ -96,12 +89,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     data.forEach(quote => {
                         const quoteElement = document.createElement('p');
                         const quoteLink = document.createElement('a');
-                        quoteLink.href = `dashboard.html?quoteId=${quote.srno}`;
+                        quoteLink.href = `index.html?quoteId=${quote.srno}`;
                         quoteLink.textContent = quote.quote;
                         quoteElement.appendChild(quoteLink);
                         searchResults.appendChild(quoteElement);
                     });
                 });
         });
+    }
+
+    function displayQuote(data) {
+        randomQuote.textContent = `"${data.quote}"`;
+        quoteImage.src = data.imagelink;
+        quoteImage.style.display = 'block';
+        quoteAuthor.textContent = `— ${data.author}`;
     }
 });
